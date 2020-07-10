@@ -7,18 +7,20 @@ import tarfile
 print("---->   Normalizacion de imagenes   <----")
 dire = input("Ingrese nombre del directorio de imagenes: ")
 
-directorio = './'+dire 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+directorio = os.path.join(current_dir,dire)
 lista_archivos = fnmatch.filter(os.listdir(directorio), '*') 
 
+os.mkdir(directorio+"_norm") 
+os.chmod(directorio+"_norm",777) 
 tamano = input("Ingrese nuevo tamaño: ") 
-print("NOTA: Se cambiara a Escala de grises y a al tamaño ingresado")
+print("NOTA: Se cambiara a Escala de grises y al tamaño ingresado")
 comprimir = input("¿Tambien desea comprimir estas imagenes? (si/no): ")
-os.mkdir("./"+ dire +"_normalizadas") 
-os.chmod("./"+ dire +"_normalizadas",777) 
 
+dirb = directorio+"_norm/"
 # CAMBIA A ESCALA DE GRISES Y REDIMENSIONA
 for x in lista_archivos:
-    img = Image.open(x).convert('L')  
+    img = Image.open(directorio+"/"+x).convert('L')  
     ancho = img.size[0] 
     alto = img.size[1] 
     if ancho > alto:
@@ -26,7 +28,7 @@ for x in lista_archivos:
         porcentaje_ancho = (base_ancho /  float(ancho) )
         tam_alto = int(float(alto) * porcentaje_ancho)
         img = img.resize((base_ancho, tam_alto), PIL.Image.ANTIALIAS)
-        img.save("./"+ dire +"_normalizadas/" + x)  
+        img.save(dirb+x)  
         print (x + " ---> OK!") 
  
     else: # SI EL ALTO ES MAYOR QUE EL ANCHO (FOTO VERTICAL) 
@@ -34,19 +36,19 @@ for x in lista_archivos:
         porcentaje_alto = (base_alto / float(alto))
         tam_ancho = int(float(ancho)  * porcentaje_alto)
         img = img.resize((tam_ancho, base_alto), PIL.Image.ANTIALIAS)
-        img.save("./"+ dire +"_normalizadas/" + x) 
+        img.save(dirb+x) 
         print (x + " ---> OK!") 
  
-print("----> Las imagenes se guardaron en "+dire+"_normalizadas")
+print("----> Las imagenes se guardaron en "+dire+"_norm")
 print ("")
 
 if comprimir == "si" or comprimir == "s":
     
-    tar = tarfile.open("./"+ dire +"_normalizadas.tar.gz", "w:gz") 
-    tar.add("./"+ dire +"_normalizadas")
+    tar = tarfile.open("./"+ dire +"_norm.tar.gz", "w:gz") 
+    tar.add("./"+ dire +"_norm")
     tar.close()
-    os.chmod(dire +"_normalizadas.tar.gz",777)
+    os.chmod(dire +"_norm.tar.gz",777)
     print ("Fotos comprimidas")
-    print("----> El comprimido se guardo en "+dire+"_normalizadas.tar.gz'")
+    print("----> El comprimido se guardo en "+dire+"_norm.tar.gz'")
  
 print("FIN") 
