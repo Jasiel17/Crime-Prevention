@@ -2,9 +2,7 @@ import numpy as np
 import cv2 
 import imutils 
 import datetime 
-  
-   
-gun_cascade = cv2.CascadeClassifier('cascade.xml') 
+gun_cascade = cv2.CascadeClassifier('cascade_guns.xml') 
 camera = cv2.VideoCapture('video.mp4') 
    
 firstFrame = None
@@ -37,8 +35,8 @@ while True:
         firstFrame = gray 
         continue
    
-    # print(datetime.date(2019)) 
-    # draw the text and timestamp on the frame 
+    
+    # fecha
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S %p"), 
                 (10, frame.shape[0] - 10), 
                 cv2.FONT_HERSHEY_SIMPLEX, 
